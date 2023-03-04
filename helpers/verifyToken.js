@@ -12,11 +12,15 @@ async function verifyToken(req,res,next){
     try {
 
         const secret = process.env.SECRET
-        console.log(secret)
-        console.log(token)
-        jwt.verify(token,secret)
+        jwt.verify(token, secret, function(err, decoded) {
+            //aqui esta a validacao da existencia de um token valido
+            if (err)
+                return res.status(500).json({ auth: false, message: 'Token inválido.' });
 
-        next()
+            req.clienteId = decoded.id
+            next();
+        });
+
     } catch (error) {
         res.status(400).json({msg:'token invalido'})
     }

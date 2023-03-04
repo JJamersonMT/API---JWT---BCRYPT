@@ -1,14 +1,14 @@
 const { ObjectId } = require('bson');
 const mongoose = require('mongoose');
 
-const serviceSchema = new mongoose.Schema({
-    type:{
+const vendidoSchema = new mongoose.Schema({
+    name:{
         type:String,
         required:true
     },
-    description:{
-        type:String,
-        required:true
+    price:{
+        type:Number,
+        require:true
     },
     clienteId:{
         type:ObjectId,
@@ -16,6 +16,6 @@ const serviceSchema = new mongoose.Schema({
     },
 });
 
-const Service = mongoose.model('service',serviceSchema)
+const vendido = mongoose.model('vendido',vendidoSchema)
 
-module.exports = Service
+module.exports = vendido
