@@ -24,14 +24,24 @@ router.post('/a',verifyToken,async function(req,res){ // *** otimizar para adici
                 return produto;
             })
 
-            const vendido = await Vendido.insertMany(resp) // insiro todos os produtos
-            // res.status(200).json({msg:"sucesso",vendido})
-
             resp.map(async produto=>{
                 let id = new ObjectId(produto.id)
                 console.log(id)
-                const prod = await Produto.findOneAndUpdate({_id:id},{$set:{comprado:true}}) // insiro todos os produtos
-                // res.status(200).json({msg:"sucesso",prod})
+                const prod = await Produto.findOneAndUpdate({name:produto.name,price:produto.price},{$inc:{qty:produto.qty}}) // insiro todos os produtos
+                try {
+                    if(!prod){
+                        const prod = new Produto(produto)
+                        const pro = await prod.save()
+                        console.log(`produto inserido ${pro}`)
+                        
+                    }else{
+
+                    }
+                } catch (error) {
+                    res.json({msg:'erro errado'})
+                }
+                 // insiro todos os produtos
+                console.log(prod)
             })
 
             res.status(200).json({msg:"sucesso"})

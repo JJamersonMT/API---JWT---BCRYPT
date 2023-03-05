@@ -10,9 +10,9 @@ const produtoSchema = new mongoose.Schema({
         type:Number,
         require:true
     },
-    comprado:{
-        type:Boolean,
-        require:false
+    qty:{
+        type:Number,
+        require:true
     },
 });
 

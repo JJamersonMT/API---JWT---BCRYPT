@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { ObjectId } = require('bson');
-const Cliente = require('../models/Cliente');
+const Vendido = require('../models/Vendido');
 const Produto = require('../models/Produto');
 const verifyToken = require('../helpers/verifyToken')
 
@@ -33,8 +33,28 @@ router.post('/a',verifyToken,async function(req,res){ // *** otimizar para adici
                 produto.clienteId = new ObjectId(req.clienteId)//adicionando id do cliente ao produto
                 return produto;
             })
-        const produto = await Produto.insertMany(resp) // insiro todos os produtos
-        res.status(200).json({msg:"sucesso",data:produto})
+        console.log(resp)
+       try {
+            resp.map(async produto =>{
+                const p = await Vendido.findOneAndUpdate({name:produto.name,price:produto.price},{$inc:{qty:produto.qty}})
+                try {
+                    if(!p){
+                        const vendido = new Vendido(produto)
+                        const pro = await vendido.save()
+                        console.log(`produto inserido ${pro}`)
+
+                    }
+                } catch (error) {
+                    res.json({msg:'erro errado'})
+                }
+                 // insiro todos os produtos
+                console.log(p)
+                const dec = await Produto.findOneAndUpdate({name:produto.name,price:produto.price},{$inc:{qty:-produto.qty}})
+            })
+            res.json({msg:'sucess'})
+       } catch (error) {
+        return res.status(400).json({msg:'erro ao atualizar'})
+       }
 
     } catch (error) {
         return res.status(400).json({error})
@@ -42,3 +62,8 @@ router.post('/a',verifyToken,async function(req,res){ // *** otimizar para adici
 })
 
 module.exports = router
+
+//rota adicao e atualizao na hora da compra feita
+//rota de busca feita
+
+//acredito que esteja tudo certo!!!!

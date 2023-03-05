@@ -14,6 +14,10 @@ const vendidoSchema = new mongoose.Schema({
         type:ObjectId,
         required:true
     },
+    qty:{
+        type:Number,
+        required:true
+    }
 });
 
 const vendido = mongoose.model('vendido',vendidoSchema)
